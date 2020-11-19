@@ -28,7 +28,7 @@ jobs:
           git config --global user.name "roerohan"
           git fetch --all --tags
 
-          wget https://gist.githubusercontent.com/dtiemann83/cfa16ade69a3ea451ad760d4118a9351/raw/a9acae271001f896adbc13d857109b2d192fc878/gitautotag.sh
+          wget https://gist.githubusercontent.com/roerohan/17e08ee9ed42d97bb841033b038117bd/raw/dfe42b58f0f88e384b40e89e789619574a24de4e/gitautotag.sh
           chmod +x ./gitautotag.sh
           ./gitautotag.sh --minor
 
