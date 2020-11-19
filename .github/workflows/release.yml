@@ -21,13 +21,13 @@ jobs:
         run: |
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/wait-for-it
 
-      - run: git fetch --all --tags
-
       - name: Increment version
         id: increment_version
         run: |
           git config --global user.email "roerohan@gmail.com"
           git config --global user.name "roerohan"
+          git fetch --all --tags
+
           wget https://gist.githubusercontent.com/dtiemann83/cfa16ade69a3ea451ad760d4118a9351/raw/a9acae271001f896adbc13d857109b2d192fc878/gitautotag.sh
           chmod +x ./gitautotag.sh
           ./gitautotag.sh --minor
