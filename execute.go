@@ -19,9 +19,9 @@ func Execute(command []string) {
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println(err.Error())
-		fmt.Println(stderr.String())
+		fmt.Print(stderr.String())
 		return
 	}
 
-	fmt.Println(out.String())
+	fmt.Print(out.String())
 }
