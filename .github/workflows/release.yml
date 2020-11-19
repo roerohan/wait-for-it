@@ -19,7 +19,7 @@ jobs:
 
       - name: Build from source
         run: |
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/wait-for-it
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it
 
       - name: Increment version
         id: increment_version
@@ -30,7 +30,7 @@ jobs:
 
           wget https://gist.githubusercontent.com/roerohan/17e08ee9ed42d97bb841033b038117bd/raw/dfe42b58f0f88e384b40e89e789619574a24de4e/gitautotag.sh
           chmod +x ./gitautotag.sh
-          ./gitautotag.sh --minor
+          ./gitautotag.sh --bug
 
           echo "VERSION=$(git tag | tail -n 1)" >> $GITHUB_ENV
 
