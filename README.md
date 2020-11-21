@@ -164,5 +164,5 @@ Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more informati
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [roerohan-url]: https://roerohan.github.io
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=flat-square
+[issues-shield]: https://img.shields.io/github/issues/roerohan/wait-for-it.svg?style=flat-square
 [issues-url]: https://github.com/roerohan/wait-for-it/issues
