@@ -103,6 +103,8 @@ go build -o ./bin/wait-for-it
 
 The usage is similar to [vishnubob/wait-for-it](https://github.com/vishnubob/wait-for-it).
 
+Use `wait-for-it -h` to display the following list.
+
 ```
 Usage of wait-for-it:
   -q    Quiet, don't output any status messages
