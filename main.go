@@ -14,10 +14,10 @@ var (
 )
 
 func init() {
-	flag.IntVar(&timeout, "t", 15, "timeout")
-	flag.BoolVar(&quiet, "q", false, "quiet")
-	flag.BoolVar(&strict, "s", false, "quiet")
-	flag.Var(&services, "w", "services")
+	flag.IntVar(&timeout, "t", 15, "Timeout in seconds, zero for no timeout")
+	flag.BoolVar(&quiet, "q", false, "Quiet, don't output any status messages")
+	flag.BoolVar(&strict, "s", false, "Only execute subcommand if the test succeeds")
+	flag.Var(&services, "w", "Services to be waiting for, in the form `host:port`")
 }
 
 // Log is used to log with prefix wait-for-it:
