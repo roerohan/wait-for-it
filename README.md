@@ -3,23 +3,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <!-- <a href="https://github.com/roerohan/Template">
+  <!-- <a href="https://github.com/roerohan/wait-for-it">
     <img src="https://project-logo.png" alt="Logo" width="80">
   </a> -->
 
-  <h3 align="center">YOUR_TITLE</h3>
+  <h3 align="center">wait-for-it</h3>
 
   <p align="center">
-    YOUR_SHORT_DESCRIPTION
+    A Golang package to wait on the availability of a TCP host and port. 
     <br />
-    <a href="https://github.com/roerohan/Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/roerohan/wait-for-it"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/roerohan/Template">View Demo</a>
+    <a href="https://github.com/roerohan/wait-for-it">View Demo</a>
     ·
-    <a href="https://github.com/roerohan/Template/issues">Report Bug</a>
+    <a href="https://github.com/roerohan/wait-for-it/issues">Report Bug</a>
     ·
-    <a href="https://github.com/roerohan/Template/issues">Request Feature</a>
+    <a href="https://github.com/roerohan/wait-for-it/issues">Request Feature</a>
   </p>
 </p>
 
@@ -44,60 +44,97 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<img src="./assets/wait-for-it.png" alt="wait-for-it" width="800">
 
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`roerohan`, `repo`
+This package is adapted from [vishnubob/wait-for-it](https://github.com/vishnubob/wait-for-it), a popular project used to wait for TCP connections until a service is up. This is commonly used in `docker-compose` files to make one service wait for another, for example, to make a web server wait for a `mysql` database.
+
+Since [vishnubob/wait-for-it](https://github.com/vishnubob/wait-for-it) is a bash script, it does not work directly with minimal containers like [scratch](https://hub.docker.com/_/scratch), which are commonly used to run binaries.
+
+With the help of this package, you can generate a binary, which can run inside minimal Docker containers and wait for a TCP connection such as a `mysql` database. You can find an example here: [csivitu/bl0b](https://github.com/csivitu/bl0b/blob/master/docker-compose.yml).
 
 
 ### Built With
 
-* []()
-* []()
-* []()
+* [Go](https://golang.org/)
 
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+A binary for `linux` is available in the [GitHub releases](https://github.com/roerohan/wait-for-it/releases/).
+
+If you want to build a binary for a different Operating System / Architecture, you can follow the procedure below.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-```sh
-npm install npm@latest -g
-```
+The only prerequisite is `golang` which you can get [here](https://golang.org/).
+
+* go
 
 ### Installation
  
-1. Clone the Repo
-```sh
-git clone https://github.com/roerohan/Template.git
-```
-2. Install NPM packages
-```sh
-npm install
+1. Get the package using `go get`.
+```bash
+go get github.com/roerohan/wait-for-it
 ```
 
+Alternatively, you can follow these steps:
+
+1. Clone the repository.
+```bash
+git clone https://github.com/roerohan/wait-for-it
+```
+
+2. Build a go binary from source.
+```bash
+cd wait-for-it
+go build -o ./bin/wait-for-it
+```
+
+3. Use the binary inside the bin folder.
+```bash
+./bin/wait-for-it google.com:80 -- echo "It works!"
+```
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+The usage is similar to [vishnubob/wait-for-it](https://github.com/vishnubob/wait-for-it).
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+```
+Usage of wait-for-it:
+  -q    Quiet, don't output any status messages
+  -s    Only execute subcommand if the test succeeds
+  -t int
+        Timeout in seconds, zero for no timeout (default 15)
+  -w host:port
+        Services to be waiting for, in the form host:port
+```
 
+### Examples:
+
+1. Waiting for multiple services in parallel.
+
+```sh
+wait-for-it -w google.com:80 -w localhost:27017 -t 30 -- echo "Waiting for 30 seconds for google.com:80 and localhost:27017"
+```
+
+2. Strict mode will not execute the subcommand only if TCP connection was successful.
+
+```sh
+$ wait-for-it . -w abcd:80 -s -t 5 -- echo "Done\!"
+wait-for-it: waiting 5 seconds for abcd:80
+wait-for-it: timeout occured after waiting for 5 seconds
+wait-for-it: strict mode, refusing to execute subprocess
+```
 
 
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/roerohan/Template/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/roerohan/wait-for-it/issues) for a list of proposed features (and known issues).
 
 
 
@@ -126,4 +163,4 @@ Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more informati
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [roerohan-url]: https://roerohan.github.io
 [issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=flat-square
-[issues-url]: https://github.com/roerohan/Template/issues
+[issues-url]: https://github.com/roerohan/wait-for-it/issues
