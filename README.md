@@ -7,7 +7,7 @@
     <img src="https://project-logo.png" alt="Logo" width="80">
   </a> -->
 
-  <h3 align="center">wait-for-it</h3>
+  <h1 align="center">wait-for-it</h1>
 
   <p align="center">
     A Golang package to wait on the availability of a TCP host and port. 
