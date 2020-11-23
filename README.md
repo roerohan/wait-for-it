@@ -62,7 +62,7 @@ With the help of this package, you can generate a binary, which can run inside m
 <!-- GETTING STARTED -->
 ## Getting Started
 
-A binary for `linux` is available in the [GitHub releases](https://github.com/roerohan/wait-for-it/releases/).
+A `amd64` (64-bit) executables for `linux`, `darwin`, and `windows` are available in the [GitHub releases](https://github.com/roerohan/wait-for-it/releases/).
 
 If you want to build a binary for a different Operating System / Architecture, you can follow the procedure below.
 
@@ -114,6 +114,8 @@ Usage of wait-for-it:
   -w host:port
         Services to be waiting for, in the form host:port
 ```
+
+You can run any executable after passing ` -- `, like in the examples below.
 
 ### Examples:
 
