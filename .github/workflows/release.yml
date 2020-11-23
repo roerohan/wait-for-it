@@ -8,11 +8,12 @@ on:
       - "v*"
 
 jobs:
-  release:
-    name: Release and Upload Asset
+  generate-linux:
+    name: Generate Linux binary
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      
       - uses: actions/setup-go@v1
         with:
           go-version: "1.15.3"
@@ -20,6 +21,79 @@ jobs:
       - name: Build from source
         run: |
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: wait-for-it
+          path: ./bin/wait-for-it
+
+  generate-windows:
+    name: Generate Windows binary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: actions/setup-go@v1
+        with:
+          go-version: "1.15.3"
+
+      - name: Build from source
+        run: |
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_win64.exe
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: wait-for-it_windows
+          path: ./bin/wait-for-it_win64.exe
+
+  generate-mac:
+    name: Generate MacOS binary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: actions/setup-go@v1
+        with:
+          go-version: "1.15.3"
+
+      - name: Build from source
+        run: |
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_mac
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: wait-for-it_mac
+          path: ./bin/wait-for-it_mac
+
+
+  release:
+    name: Release and Upload Asset
+    runs-on: ubuntu-latest
+    needs: [generate-linux, generate-windows, generate-mac]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: wait-for-it
+          path: ./bin
+      
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: wait-for-it_windows
+          path: ./bin
+      
+      - name: Download MacOS Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: wait-for-it_mac
+          path: ./bin
+
 
       - name: Increment version
         id: increment_version
@@ -44,18 +118,16 @@ jobs:
           release_name: Release ${{ env.VERSION }}
           body: |
             The binary executable compiled using the following command:
-            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it
+            CGO_ENABLED=0 GOOS={os} GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_{os}
+
+            For any other Operating System, you can run the command above with your OS and ARCH to generate a binary.
 
           draft: false
           prerelease: false
 
       - name: Upload Release Asset
         id: upload-release-asset
-        uses: actions/upload-release-asset@v1
+        run: |
+          hub release edit -a ./bin/wait-for-it -a ./bin/wait-for-it_mac -a ./bin/wait-for-it_win64.exe -m "" ${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/wait-for-it
-          asset_name: wait-for-it
-          asset_content_type: application/octet-stream
