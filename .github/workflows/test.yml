@@ -127,6 +127,6 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset
         run: |
-          hub release edit -a ./bin/wait-for-it -a ./bin/wait-for-it_mac -a ./bin/wait-for-it_windows -m "" ${{ env.VERSION }}
+          hub release edit -a ./bin/wait-for-it -a ./bin/wait-for-it_mac -a ./bin/wait-for-it_windows -m "" test-${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
