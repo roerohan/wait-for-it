@@ -23,7 +23,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: wait-for-it_linux
+          name: wait-for-it
           path: ./bin/wait-for-it_linux
 
   generate-windows:
@@ -77,7 +77,7 @@ jobs:
       - name: Download Linux Artifact
         uses: actions/download-artifact@v2
         with:
-          name: wait-for-it_linux
+          name: wait-for-it
           path: ./bin
       
       - name: Download Windows Artifact
@@ -96,63 +96,35 @@ jobs:
           ls -la
           ls -la ./bin
 
-      # - name: Increment version
-      #   id: increment_version
-      #   run: |
-      #     git config --global user.email "roerohan@gmail.com"
-      #     git config --global user.name "roerohan"
-      #     git fetch --all --tags
+      - name: Increment version
+        id: increment_version
+        run: |
+          git config --global user.email "roerohan@gmail.com"
+          git config --global user.name "roerohan"
+          git fetch --all --tags
 
-      #     wget https://gist.githubusercontent.com/roerohan/17e08ee9ed42d97bb841033b038117bd/raw/dfe42b58f0f88e384b40e89e789619574a24de4e/gitautotag.sh
-      #     chmod +x ./gitautotag.sh
-      #     ./gitautotag.sh --bug
+          wget https://gist.githubusercontent.com/roerohan/17e08ee9ed42d97bb841033b038117bd/raw/dfe42b58f0f88e384b40e89e789619574a24de4e/gitautotag.sh
+          chmod +x ./gitautotag.sh
+          ./gitautotag.sh --bug
 
-      #     echo "VERSION=$(git tag | tail -n 1)" >> $GITHUB_ENV
+          echo "VERSION=$(git tag | tail -n 1)" >> $GITHUB_ENV
 
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: test-${{ env.VERSION }}
-      #     release_name: Release test-${{ env.VERSION }}
-      #     body: |
-      #       The binary executable compiled using the following command:
-      #       CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: test-${{ env.VERSION }}
+          release_name: Release test-${{ env.VERSION }}
+          body: |
+            The binary executable compiled using the following command:
+            CGO_ENABLED=0 GOOS=<os> GOARCH=<arch> go build -ldflags "-s -w" -o ./bin/wait-for-it_<os>
 
-      #     draft: true
-      #     prerelease: false
+          draft: true
+          prerelease: false
 
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: wait-for-it_linux
-      #     asset_name: wait-for-it_linux
-      #     asset_content_type: application/octet-stream
-
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: wait-for-it_windows
-      #     asset_name: wait-for-it_windows
-      #     asset_content_type: application/octet-stream
-
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: wait-for-it_mac
-      #     asset_name: wait-for-it_mac
-      #     asset_content_type: application/octet-stream
+      - name: Upload Release Asset
+        id: upload-release-asset
+        run: |
+          hub release edit -a ./bin/wait-for-it -a ./bin/wait-for-it_mac -a ./bin/wait-for-it_windows -m "" ${{ env.VERSION }}
