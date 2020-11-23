@@ -38,13 +38,13 @@ jobs:
 
       - name: Build from source
         run: |
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_windows
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_win64.exe
       
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: wait-for-it_windows
-          path: ./bin/wait-for-it_windows
+          path: ./bin/wait-for-it_win64.exe
 
   generate-mac:
     name: Generate MacOS binary
@@ -91,10 +91,7 @@ jobs:
         with:
           name: wait-for-it_mac
           path: ./bin
-      
-      - run: |
-          ls -la
-          ls -la ./bin
+
 
       - name: Increment version
         id: increment_version
@@ -119,7 +116,9 @@ jobs:
           release_name: Release test-${{ env.VERSION }}
           body: |
             The binary executable compiled using the following command:
-            CGO_ENABLED=0 GOOS=<os> GOARCH=<arch> go build -ldflags "-s -w" -o ./bin/wait-for-it_<os>
+            CGO_ENABLED=0 GOOS={os} GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_{os}
+
+            For any other Operating System, you can run the command above with your OS and ARCH to generate a binary.
 
           draft: true
           prerelease: false
@@ -127,6 +126,6 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset
         run: |
-          hub release edit -a ./bin/wait-for-it -a ./bin/wait-for-it_mac -a ./bin/wait-for-it_windows -m "" test-${{ env.VERSION }}
+          hub release edit -a ./bin/wait-for-it -a ./bin/wait-for-it_mac -a ./bin/wait-for-it_win64.exe -m "" test-${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
