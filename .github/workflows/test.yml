@@ -61,7 +61,7 @@ jobs:
         with:
           path: ./bin
       
-      - run: ls ./bin
+      - run: ls -la
       
       # - name: Increment version
       #   id: increment_version
