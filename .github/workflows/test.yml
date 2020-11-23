@@ -18,13 +18,13 @@ jobs:
 
       - name: Build from source
         run: |
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_linux
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it
         
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: wait-for-it
-          path: ./bin/wait-for-it_linux
+          path: ./bin/wait-for-it
 
   generate-windows:
     name: Generate Windows binary
