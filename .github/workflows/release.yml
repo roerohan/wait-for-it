@@ -3,7 +3,7 @@ name: Build from source and make a new release on GitHub
 on:
   push:
     branches:
-      - master
+      - main
     tags:
       - "v*"
 
