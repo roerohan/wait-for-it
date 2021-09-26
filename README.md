@@ -76,7 +76,7 @@ The only prerequisite is `golang` which you can get [here](https://golang.org/).
  
 1. Get the package using `go get`.
 ```bash
-go get github.com/roerohan/wait-for-it
+go install github.com/roerohan/wait-for-it
 ```
 
 Alternatively, you can follow these steps:
@@ -94,7 +94,7 @@ go build -o ./bin/wait-for-it
 
 3. Use the binary inside the bin folder.
 ```bash
-./bin/wait-for-it google.com:80 -- echo "It works!"
+./bin/wait-for-it google.com:80 -- echo "It works\!"
 ```
 
 
