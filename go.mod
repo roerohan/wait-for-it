@@ -1,3 +1,3 @@
 module github.com/roerohan/wait-for-it
 
-go 1.15
+go 1.17
