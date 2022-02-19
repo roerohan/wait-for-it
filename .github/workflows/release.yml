@@ -101,6 +101,7 @@ jobs:
           git config --global user.email "roerohan@gmail.com"
           git config --global user.name "roerohan"
           git fetch --all --tags
+          git fetch origin
 
           wget https://gist.githubusercontent.com/roerohan/17e08ee9ed42d97bb841033b038117bd/raw/3e73b37c5f3a3c48fc9cf6d35e52f123dea0438b/gitautotag.sh
           chmod +x ./gitautotag.sh
