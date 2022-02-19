@@ -128,7 +128,7 @@ wait-for-it -w google.com:80 -w localhost:27017 -t 30 -- echo "Waiting for 30 se
 2. Strict mode will not execute the subcommand only if TCP connection was successful.
 
 ```sh
-$ wait-for-it . -w abcd:80 -s -t 5 -- echo "Done\!"
+$ wait-for-it -w abcd:80 -s -t 5 -- echo "Done\!"
 wait-for-it: waiting 5 seconds for abcd:80
 wait-for-it: timeout occured after waiting for 5 seconds
 wait-for-it: strict mode, refusing to execute subprocess
