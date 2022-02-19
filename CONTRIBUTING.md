@@ -4,7 +4,7 @@ Thanks for contributing! :smile:
 
 The following is a set of guidelines for contributing. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
-> Note: Contributions should be made via pull requests to the dev branch of the repository.
+> Note: Contributions should be made via pull requests to the `main` branch of the repository.
 
 ## Table of Contents
 
