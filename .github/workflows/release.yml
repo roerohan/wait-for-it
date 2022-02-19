@@ -16,7 +16,7 @@ jobs:
       
       - uses: actions/setup-go@v1
         with:
-          go-version: "1.15.3"
+          go-version: "1.17.1"
 
       - name: Build from source
         run: |
@@ -36,7 +36,7 @@ jobs:
       
       - uses: actions/setup-go@v1
         with:
-          go-version: "1.15.3"
+          go-version: "1.17.1"
 
       - name: Build from source
         run: |
@@ -56,7 +56,7 @@ jobs:
       
       - uses: actions/setup-go@v1
         with:
-          go-version: "1.15.3"
+          go-version: "1.17.1"
 
       - name: Build from source
         run: |
@@ -107,6 +107,7 @@ jobs:
           ./gitautotag.sh --bug
 
           echo "VERSION=$(git tag | tail -n 1)" >> $GITHUB_ENV
+          echo "VERSION=$VERSION"
 
       - name: Create Release
         id: create_release
