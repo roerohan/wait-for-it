@@ -41,7 +41,7 @@ func main() {
 			Log(fmt.Sprintf("timeout occured after waiting for %d seconds", timeout))
 			if strict {
 				Log("strict mode, refusing to execute subprocess")
-				return
+				os.Exit(1)
 			}
 		}
 	}
