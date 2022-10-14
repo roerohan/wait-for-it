@@ -70,7 +70,6 @@ jobs:
 
       - name: Build from source
         run: |
-          CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -ldflags "-s -w" -o ./bin/wait-for-it-darwin-386.exe
           CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it-darwin-amd64.exe
           CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it-darwin-arm64.exe
 
