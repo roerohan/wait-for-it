@@ -74,7 +74,7 @@ The only prerequisite is `golang` which you can get [here](https://golang.org/).
 
 ### Installation
  
-1. Get the package using `go get`.
+1. Get the package using `go install`.
 ```bash
 go install github.com/roerohan/wait-for-it
 ```
