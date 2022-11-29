@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/roerohan/wait-for-it/pkg/wait"
 	"os"
 )
 
 var (
 	timeout  int
-	services Services
+	services wait.Services
 	quiet    bool
 	strict   bool
 )
@@ -21,12 +22,12 @@ func init() {
 }
 
 // Log is used to log with prefix wait-for-it:
-func Log(message string) {
+func log(message string) {
 	if quiet {
 		return
 	}
 
-	fmt.Println("wait-for-it: " + message)
+	wait.Log("wait-for-it: " + message)
 }
 
 func main() {
@@ -34,13 +35,13 @@ func main() {
 	args := os.Args
 
 	if len(services) != 0 {
-		Log(fmt.Sprintf("waiting %d seconds for %s", timeout, services.String()))
+		log(fmt.Sprintf("waiting %d seconds for %s", timeout, services.String()))
 		ok := services.Wait(timeout)
 
 		if !ok {
-			Log(fmt.Sprintf("timeout occured after waiting for %d seconds", timeout))
+			log(fmt.Sprintf("timeout occured after waiting for %d seconds", timeout))
 			if strict {
-				Log("strict mode, refusing to execute subprocess")
+				log("strict mode, refusing to execute subprocess")
 				return
 			}
 		}

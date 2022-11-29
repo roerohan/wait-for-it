@@ -1,4 +1,4 @@
-package main
+package wait
 
 import (
 	"fmt"
@@ -10,13 +10,21 @@ import (
 
 // Services is a string array storing
 // the services that are to be waited for
-type Services []string
+type Services []Service
 
-// Set is used to append a string
-// to the service, to implement
+// Service is a string meant to denote a service with a wait condition upon start up
+type Service string
+
+func (s *Service) String() string {
+	return string(*s)
+}
+
+// Set is used to append a Service
+// to the slice of Services, to implement
 // the interface flag.Value
 func (s *Services) Set(value string) error {
-	*s = append(*s, value)
+	service := interface{}(value).(Service)
+	*s = append(*s, service)
 	return nil
 }
 
@@ -25,7 +33,13 @@ func (s *Services) Set(value string) error {
 // to implement the interface
 // flag.Value
 func (s *Services) String() string {
-	return strings.Join(*s, ", ")
+	var sb strings.Builder
+	const formatter string = ", "
+	for _, service := range *s {
+		sb.WriteString(service.String())
+		sb.WriteString(formatter)
+	}
+	return sb.String()
 }
 
 // Wait waits for all services
@@ -39,7 +53,7 @@ func (s *Services) Wait(tSeconds int) bool {
 	success := make(chan bool, 1)
 
 	go func() {
-		for _, service := range services {
+		for _, service := range *s {
 			go waitOne(service, &wg, now)
 		}
 		wg.Wait()
@@ -52,16 +66,17 @@ func (s *Services) Wait(tSeconds int) bool {
 	case <-time.After(t):
 		return false
 	}
+
 }
 
-func waitOne(service string, wg *sync.WaitGroup, start time.Time) {
+func waitOne(service Service, wg *sync.WaitGroup, start time.Time) {
 	defer wg.Done()
 	for {
-		_, err := net.Dial("tcp", service)
+		_, err := net.Dial("tcp", service.String())
 		if err == nil {
 			Log(fmt.Sprintf("%s is available after %s", service, time.Since(start)))
-			break
 		}
-		time.Sleep(time.Second)
+		break
 	}
+	time.Sleep(time.Second)
 }
