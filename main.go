@@ -42,10 +42,10 @@ func main() {
 		err := wait.ForDependencies(services, time.Duration(reqTimeout), time.Duration(maxTimeout))
 		if err != nil {
 			log(fmt.Sprintf("wait.ForDependencies failed with err %v", err))
-			if strict {
-				log("strict mode, refusing to execute subprocess")
-				os.Exit(1)
-			}
+			os.Exit(1)
+		}
+		if strict {
+			log("strict mode, refusing to execute subprocess")
 			os.Exit(1)
 		}
 	}
