@@ -9,14 +9,16 @@ import (
 )
 
 var (
-	timeout  int
-	services wait.Services
-	quiet    bool
-	strict   bool
+	reqTimeout int
+	maxTimeout int
+	services   wait.Services
+	quiet      bool
+	strict     bool
 )
 
 func init() {
-	flag.IntVar(&timeout, "t", 15, "Service request timeout in seconds, zero for no timeout")
+	flag.IntVar(&reqTimeout, "t", 15, "Service request timeout in seconds, zero for no timeout")
+	flag.IntVar(&maxTimeout, "m", 30, "Max service timeout to retry request in seconds, zero for no max service timeout")
 	flag.BoolVar(&quiet, "q", false, "Quiet, don't output any status messages")
 	flag.BoolVar(&strict, "s", false, "Only execute subcommand if the test succeeds")
 	flag.Var(&services, "w", "Dependency services to be waiting for, in the form `host:port`")
@@ -28,7 +30,7 @@ func log(message string) {
 		return
 	}
 
-	wait.Log("wait-for-it: " + message)
+	wait.Log(message)
 }
 
 func main() {
@@ -36,15 +38,15 @@ func main() {
 	args := os.Args
 
 	if len(services) != 0 {
-		log(fmt.Sprintf("waiting %d seconds for %s", timeout, services.String()))
-		err := wait.ForDependencies(services, time.Duration(timeout), 30*time.Second)
+		log(fmt.Sprintf("waiting %d seconds for %s for a max of %d seconds", reqTimeout, services.String(), maxTimeout))
+		err := wait.ForDependencies(services, time.Duration(reqTimeout), time.Duration(maxTimeout))
 		if err != nil {
-			log(fmt.Sprintf("timeout occured after waiting for %d seconds", timeout))
 			log(fmt.Sprintf("wait.ForDependencies failed with err %v", err))
 			if strict {
 				log("strict mode, refusing to execute subprocess")
 				return
 			}
+			return
 		}
 	}
 

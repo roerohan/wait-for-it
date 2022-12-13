@@ -44,7 +44,6 @@ func (s *Services) Set(value string) error {
 
 	// Note: serviceInfo[0] = hostname, serviceInfo[1] = port
 	serviceInfo := strings.Split(value, separator)
-	Log(fmt.Sprintf("serviceInfo %s", serviceInfo))
 	port, err := strconv.Atoi(serviceInfo[1])
 	if err != nil {
 		return err
@@ -64,54 +63,30 @@ func (s *Services) String() string {
 		sb.WriteString(service.String())
 		sb.WriteString(formatter)
 	}
-	return sb.String()
-}
 
-//func ForDependencies(waitServices Services, serviceRequestTimeout time.Duration) error {
-//	//serviceTimeout := int(serviceRequestTimeout.Seconds())
-//	success := make(chan bool, 1)
-//
-//	if len(waitServices) != 0 {
-//		//lc.Infof("Service startup timeout invoked to wait %d seconds for dependent services %s", serviceTimeout, dependentServices)
-//		ok := wait(waitServices, serviceRequestTimeout)
-//		if ok {
-//			success <- true
-//		} else {
-//			Log("Waiting for service dependencies to become available...")
-//		}
-//	}
-//
-//	// return err if service wait time exceeds ServiceMaxTimeout time
-//	select {
-//	case <-success:
-//		return nil
-//	//case <-time.After(ServiceMaxTimeout):
-//	//	return ErrServiceMaxTimeout
-//	}
-//	return nil
-//}
+	// trim the last comma that was added for last service
+	return strings.TrimSuffix(sb.String(), formatter)
+}
 
 // ForDependencies allows the service to wait for its dependencies to be up and ready for a configurable amount of time.
 // If the service dependency request timeout is reached and the dependent services are not yet available,
 // then the timeout wait interval will continue until the dependencies are up for a maximum wait time of maxTimeout.
 func ForDependencies(waitServices Services, serviceRequestTimeout, maxTimeout time.Duration) error {
-	success := make(chan bool, 1)
+	if len(waitServices) == 0 {
+		return nil
+	}
 
-	if len(waitServices) != 0 {
-		//lc.Infof("Service startup timeout invoked to wait %d seconds for dependent services %s", serviceTimeout, dependentServices)
-		ok := wait(waitServices, serviceRequestTimeout)
-		if ok {
-			success <- true
-		} else {
-			Log("Waiting for service dependencies to become available...")
-		}
+	success := make(chan bool, 1)
+	ok := wait(waitServices, serviceRequestTimeout)
+	if ok {
+		success <- true
 	}
 
 	// return err if service wait time exceeds ServiceMaxTimeout time
 	select {
 	case <-success:
 		return nil
-	case <-time.After(maxTimeout):
+	case <-time.After(maxTimeout * time.Second):
 		return ErrServiceMaxTimeout
 	}
 }
@@ -135,7 +110,7 @@ func wait(waitServices Services, waitTimeOut time.Duration) bool {
 	select {
 	case <-success:
 		return true
-	case <-time.After(waitTimeOut):
+	case <-time.After(waitTimeOut * time.Second):
 		return false
 	}
 
@@ -151,7 +126,7 @@ func waitOne(service Service, wg *sync.WaitGroup, start time.Time) {
 		}
 		opErr, ok := err.(*net.OpError)
 		if ok && errors.Is(err, opErr) {
-			Log(fmt.Sprintf("failed to dial service %s with error: %s", service.String(), opErr.Error()))
+			Log(fmt.Sprintf("failed to dial service %s with err: %s", service.String(), opErr.Error()))
 			break
 		}
 		time.Sleep(time.Second)
