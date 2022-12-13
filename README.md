@@ -107,12 +107,14 @@ Use `wait-for-it -h` to display the following list.
 
 ```
 Usage of wait-for-it:
+  -m int
+        Max service timeout to retry request in seconds, zero for no max service timeout (default 30)
   -q    Quiet, don't output any status messages
   -s    Only execute subcommand if the test succeeds
   -t int
-        Timeout in seconds, zero for no timeout (default 15)
+        Service request timeout in seconds, zero for no timeout (default 15)
   -w host:port
-        Services to be waiting for, in the form host:port
+        Dependency services to be waiting for, in the form host:port
 ```
 
 You can run any executable after passing ` -- `, like in the examples below.
@@ -129,8 +131,8 @@ wait-for-it -w google.com:80 -w localhost:27017 -t 30 -- echo "Waiting for 30 se
 
 ```sh
 $ wait-for-it -w abcd:80 -s -t 5 -- echo "Done\!"
-wait-for-it: waiting 5 seconds for abcd:80
-wait-for-it: timeout occured after waiting for 5 seconds
+wait-for-it: waiting 5 seconds for abcd:80 for a max of 10 seconds
+wait-for-it: failed to dial service abcd:80 with err: dial tcp: lookup abcd on 172.24.128.1:53: no such host
 wait-for-it: strict mode, refusing to execute subprocess
 ```
 
