@@ -50,7 +50,10 @@ This package is adapted from [vishnubob/wait-for-it](https://github.com/vishnubo
 
 Since [vishnubob/wait-for-it](https://github.com/vishnubob/wait-for-it) is a bash script, it does not work directly with minimal containers like [scratch](https://hub.docker.com/_/scratch), which are commonly used to run binaries.
 
-With the help of this package, you can generate a binary, which can run inside minimal Docker containers and wait for a TCP connection such as a `mysql` database. You can find an example here: [csivitu/bl0b](https://github.com/csivitu/bl0b/blob/master/docker-compose.yml).
+With the help of this package, you can:
+1. Generate a binary, which can run inside minimal Docker containers and wait for a TCP connection such as a `mysql` database. You can find an example here: [csivitu/bl0b](https://github.com/csivitu/bl0b/blob/master/docker-compose.yml).
+2. Consume the `wait` package internally within your Go microservices.
+This would allow your services running natively to have the same wait setup as that of when running within a Docker environment.
 
 
 ### Built With
