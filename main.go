@@ -44,9 +44,9 @@ func main() {
 			log(fmt.Sprintf("wait.ForDependencies failed with err %v", err))
 			if strict {
 				log("strict mode, refusing to execute subprocess")
-				return
+				os.Exit(1)
 			}
-			return
+			os.Exit(1)
 		}
 	}
 
