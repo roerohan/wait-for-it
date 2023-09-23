@@ -62,5 +62,5 @@ func main() {
 		return
 	}
 
-	Execute(command)
+	os.Exit(Execute(command))
 }
