@@ -20,13 +20,18 @@ jobs:
 
       - name: Build from source
         run: |
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it
+          CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -ldflags "-s -w" -o ./bin/wait-for-it.linux-386.exe
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it-linux-amd64.exe
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o ./bin/wait-for-it-linux-arm64.exe
         
-      - name: Upload artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: wait-for-it
-          path: ./bin/wait-for-it
+          name: linux artifacts
+          path: |
+            ./bin/wait-for-it.linux-i386 
+            ./bin/wait-for-it.linux-amd64
+            ./bin/wait-for-it.linux-arm64
 
   generate-windows:
     name: Generate Windows binary
@@ -40,13 +45,18 @@ jobs:
 
       - name: Build from source
         run: |
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_win64.exe
+          CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -ldflags "-s -w" -o ./bin/wait-for-it-windows-386.exe
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it-windows-amd64.exe
+          CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -ldflags "-s -w" -o ./bin/wait-for-it-windows-arm64.exe
       
-      - name: Upload artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: wait-for-it_windows
-          path: ./bin/wait-for-it_win64.exe
+          name: windows artifacts
+          path: |
+            ./bin/wait-for-it.windows-i386.exe
+            ./bin/wait-for-it.windows-amd64.exe
+            ./bin/wait-for-it.windows-arm64.exe
 
   generate-mac:
     name: Generate MacOS binary
@@ -60,13 +70,16 @@ jobs:
 
       - name: Build from source
         run: |
-          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it_mac
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it-darwin-amd64.exe
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o ./bin/wait-for-it-darwin-arm64.exe
 
-      - name: Upload artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: wait-for-it_mac
-          path: ./bin/wait-for-it_mac
+          name: darwin artifacts
+          path: |
+            ./bin/wait-for-it.darwin-amd64
+            ./bin/wait-for-it.darwin-arm64
 
 
   release:
@@ -130,6 +143,6 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset
         run: |
-          hub release edit -a ./bin/wait-for-it -a ./bin/wait-for-it_mac -a ./bin/wait-for-it_win64.exe -m "" ${{ env.VERSION }}
+          hub release edit -a ./bin/wait-for-it.linux-i386 -a ./bin/wait-for-it.linux-amd64 -a ./bin/wait-for-it.linux-arm64 -a ./bin/wait-for-it.windows-i386.exe -a ./bin/wait-for-it.windows-amd64.exe -a ./bin/wait-for-it.windows-arm64.exe -a ./bin/wait-for-it.darwin-amd64 -a ./bin/wait-for-it.darwin-arm64 -m "" ${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
