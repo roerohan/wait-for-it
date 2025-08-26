@@ -3,30 +3,34 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/roerohan/wait-for-it/pkg/wait"
 	"os"
+	"time"
 )
 
 var (
-	timeout  int
-	services Services
-	quiet    bool
-	strict   bool
+	reqTimeout int
+	maxTimeout int
+	services   wait.Services
+	quiet      bool
+	strict     bool
 )
 
 func init() {
-	flag.IntVar(&timeout, "t", 15, "Timeout in seconds, zero for no timeout")
+	flag.IntVar(&reqTimeout, "t", 15, "Service request timeout in seconds, zero for no timeout")
+	flag.IntVar(&maxTimeout, "m", 30, "Max service timeout to retry request in seconds, zero for no max service timeout")
 	flag.BoolVar(&quiet, "q", false, "Quiet, don't output any status messages")
 	flag.BoolVar(&strict, "s", false, "Only execute subcommand if the test succeeds")
-	flag.Var(&services, "w", "Services to be waiting for, in the form `host:port`")
+	flag.Var(&services, "w", "Dependency services to be waiting for, in the form `host:port`")
 }
 
 // Log is used to log with prefix wait-for-it:
-func Log(message string) {
+func log(message string) {
 	if quiet {
 		return
 	}
 
-	fmt.Println("wait-for-it: " + message)
+	wait.Log(message)
 }
 
 func main() {
@@ -34,15 +38,15 @@ func main() {
 	args := os.Args
 
 	if len(services) != 0 {
-		Log(fmt.Sprintf("waiting %d seconds for %s", timeout, services.String()))
-		ok := services.Wait(timeout)
-
-		if !ok {
-			Log(fmt.Sprintf("timeout occured after waiting for %d seconds", timeout))
-			if strict {
-				Log("strict mode, refusing to execute subprocess")
-				os.Exit(1)
-			}
+		log(fmt.Sprintf("waiting %d seconds for %s for a max of %d seconds", reqTimeout, services.String(), maxTimeout))
+		err := wait.ForDependencies(services, time.Duration(reqTimeout), time.Duration(maxTimeout))
+		if err != nil {
+			log(fmt.Sprintf("wait.ForDependencies failed with err %v", err))
+			os.Exit(1)
+		}
+		if strict {
+			log("strict mode, refusing to execute subprocess")
+			os.Exit(1)
 		}
 	}
 
